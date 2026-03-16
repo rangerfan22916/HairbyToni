@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Hair by Toni</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+.admin-container {
+max-width: 1200px;
+margin: 0 auto;
+padding: 20px;
+}
+
+.admin-header {
+text-align: center;
+margin-bottom: 40px;
+}
+
+.admin-header h1 {
+color: #2c3e50;
+font-size: 32px;
+margin-bottom: 10px;
+}
+
+.admin-header p {
+color: #6c757d;
+font-size: 16px;
+}
+
+.spreadsheet-container {
+background: white;
+border-radius: 12px;
+box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+overflow: hidden;
+border: 1px solid #e9ecef;
+}
+
+.spreadsheet-header {
+background: #f8f9fa;
+padding: 20px;
+border-bottom: 1px solid #e9ecef;
+}
+
+.spreadsheet-controls {
+display: flex;
+gap: 15px;
+align-items: center;
+flex-wrap: wrap;
+}
+
+.control-group {
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.control-group label {
+font-weight: 500;
+color: #2c3e50;
+}
+
+.control-group select,
+.control-group input {
+padding: 8px 12px;
+border: 1px solid #e9ecef;
+border-radius: 6px;
+font-size: 14px;
+}
+
+.btn {
+background: #c8a97e;
+color: white;
+border: none;
+padding: 10px 20px;
+border-radius: 6px;
+cursor: pointer;
+font-weight: 500;
+transition: all 0.2s ease;
+}
+
+.btn:hover {
+background: #b8956a;
+transform: translateY(-1px);
+}
+
+.btn-danger {
+background: #dc3545;
+}
+
+.btn-danger:hover {
+background: #c82333;
+}
+
+.spreadsheet-table {
+width: 100%;
+border-collapse: collapse;
+}
+
+.spreadsheet-table th,
+.spreadsheet-table td {
+padding: 12px 16px;
+text-align: center;
+border: 1px solid #e9ecef;
+font-size: 14px;
+}
+
+.spreadsheet-table th {
+background: #f8f9fa;
+font-weight: 600;
+color: #2c3e50;
+position: sticky;
+top: 0;
+z-index: 10;
+}
+
+.spreadsheet-table tbody tr:nth-child(even) {
+background: #f8f9fa;
+}
+
+.spreadsheet-table tbody tr:hover {
+background: #e9ecef;
+}
+
+.time-cell {
+min-width: 80px;
+}
+
+.status-cell {
+min-width: 100px;
+}
+
+.status-available {
+background: #d4edda;
+color: #155724;
+padding: 4px 8px;
+border-radius: 4px;
+font-weight: 500;
+}
+
+.status-unavailable {
+background: #f8d7da;
+color: #721c24;
+padding: 4px 8px;
+border-radius: 4px;
+font-weight: 500;
+}
+
+.status-booked {
+background: #fff3cd;
+color: #856404;
+padding: 4px 8px;
+border-radius: 4px;
+font-weight: 500;
+}
+
+.toggle-btn {
+background: none;
+border: 1px solid #c8a97e;
+color: #c8a97e;
+padding: 4px 8px;
+border-radius: 4px;
+cursor: pointer;
+font-size: 12px;
+transition: all 0.2s ease;
+}
+
+.toggle-btn:hover {
+background: #c8a97e;
+color: white;
+}
+
+.bulk-actions {
+margin-top: 20px;
+padding: 20px;
+background: #f8f9fa;
+border-radius: 8px;
+border: 1px solid #e9ecef;
+}
+
+.bulk-actions h3 {
+margin-bottom: 15px;
+color: #2c3e50;
+font-size: 18px;
+}
+
+.bulk-controls {
+display: flex;
+gap: 15px;
+align-items: center;
+flex-wrap: wrap;
+}
+
+.save-indicator {
+margin-left: auto;
+font-weight: 500;
+}
+
+.save-indicator.saved {
+color: #28a745;
+}
+
+.save-indicator.saving {
+color: #ffc107;
+}
+
+.save-indicator.error {
+color: #dc3545;
+}
+
+@media (max-width: 768px) {
+.spreadsheet-controls {
+flex-direction: column;
+align-items: stretch;
+}
+
+.control-group {
+justify-content: space-between;
+}
+
+.spreadsheet-table {
+font-size: 12px;
+}
+
+.spreadsheet-table th,
+.spreadsheet-table td {
+padding: 8px 4px;
+}
+
+.time-cell {
+min-width: 60px;
+}
+
+.bulk-controls {
+flex-direction: column;
+align-items: stretch;
+}
+}
+</style>
+</head>
+
+<body>
+<nav>
+<a href="index.html"><h2>Hair by Toni</h2></a>
+<div class="nav-container">
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="index.html#services">Services</a></li>
+<li><a href="index.html#gallery">Gallery</a></li>
+<li><a href="index.html#contact">Contact</a></li>
+</ul>
+<a href="index.html#contact" class="book">Book Appointment</a>
+</div>
+<div class="hamburger">
+<span></span>
+<span></span>
+<span></span>
+</div>
+</nav>
+
+<section class="admin-container">
+<div class="admin-header">
+<h1>Calendar Admin Panel</h1>
+<p>Manage your availability schedule like a spreadsheet</p>
+</div>
+
+<div class="spreadsheet-container">
+<div class="spreadsheet-header">
+<div class="spreadsheet-controls">
+<div class="control-group">
+<label for="monthSelect">Month:</label>
+<select id="monthSelect">
+<option value="0">January</option>
+<option value="1">February</option>
+<option value="2">March</option>
+<option value="3">April</option>
+<option value="4">May</option>
+<option value="5">June</option>
+<option value="6">July</option>
+<option value="7">August</option>
+<option value="8">September</option>
+<option value="9">October</option>
+<option value="10">November</option>
+<option value="11">December</option>
+</select>
+</div>
+
+<div class="control-group">
+<label for="yearSelect">Year:</label>
+<select id="yearSelect">
+<option value="2026">2026</option>
+<option value="2027">2027</option>
+<option value="2028">2028</option>
+</select>
+</div>
+
+<button id="loadDataBtn" class="btn">Load Data</button>
+<span id="saveIndicator" class="save-indicator">Ready</span>
+</div>
+</div>
+
+<div class="bulk-actions">
+<h3>Bulk Actions</h3>
+<div class="bulk-controls">
+<button id="setAllAvailable" class="btn">Set All Available</button>
+<button id="setAllUnavailable" class="btn">Set All Unavailable</button>
+<button id="setWeekdaysAvailable" class="btn">Weekdays Available</button>
+<button id="setWeekendsUnavailable" class="btn">Weekends Closed</button>
+<button id="clearAllBookings" class="btn btn-danger">Clear All Bookings</button>
+</div>
+</div>
+
+<div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;">
+<table class="spreadsheet-table" id="availabilityTable">
+<thead>
+<tr>
+<th>Date</th>
+<th>Day</th>
+<th>Available</th>
+<th>9:00 AM</th>
+<th>9:30 AM</th>
+<th>10:00 AM</th>
+<th>10:30 AM</th>
+<th>11:00 AM</th>
+<th>11:30 AM</th>
+<th>12:00 PM</th>
+<th>12:30 PM</th>
+<th>1:00 PM</th>
+<th>1:30 PM</th>
+<th>2:00 PM</th>
+<th>2:30 PM</th>
+<th>3:00 PM</th>
+<th>3:30 PM</th>
+<th>4:00 PM</th>
+<th>4:30 PM</th>
+<th>5:00 PM</th>
+<th>5:30 PM</th>
+<th>6:00 PM</th>
+<th>6:30 PM</th>
+</tr>
+</thead>
+<tbody id="tableBody">
+<!-- Table rows will be populated by JavaScript -->
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<script>
+// Admin Spreadsheet Functionality
+class AdminSpreadsheet {
+constructor() {
+this.currentMonth = new Date().getMonth();
+this.currentYear = new Date().getFullYear();
+this.availabilityData = {};
+this.init();
+}
+
+init() {
+this.bindEvents();
+this.setCurrentMonthYear();
+this.loadData();
+}
+
+bindEvents() {
+document.getElementById('monthSelect').addEventListener('change', () => {
+this.currentMonth = parseInt(document.getElementById('monthSelect').value);
+this.loadData();
+});
+
+document.getElementById('yearSelect').addEventListener('change', () => {
+this.currentYear = parseInt(document.getElementById('yearSelect').value);
+this.loadData();
+});
+
+document.getElementById('loadDataBtn').addEventListener('click', () => {
+this.loadData();
+});
+
+document.getElementById('setAllAvailable').addEventListener('click', () => {
+this.bulkAction('setAvailable');
+});
+
+document.getElementById('setAllUnavailable').addEventListener('click', () => {
+this.bulkAction('setUnavailable');
+});
+
+document.getElementById('setWeekdaysAvailable').addEventListener('click', () => {
+this.bulkAction('weekdaysAvailable');
+});
+
+document.getElementById('setWeekendsUnavailable').addEventListener('click', () => {
+this.bulkAction('weekendsUnavailable');
+});
+
+document.getElementById('clearAllBookings').addEventListener('click', () => {
+if (confirm('Are you sure you want to clear all bookings? This cannot be undone.')) {
+this.bulkAction('clearBookings');
+}
+});
+}
+
+setCurrentMonthYear() {
+document.getElementById('monthSelect').value = this.currentMonth;
+document.getElementById('yearSelect').value = this.currentYear;
+}
+
+loadData() {
+this.availabilityData = this.loadAvailabilityFromStorage();
+this.renderTable();
+}
+
+loadAvailabilityFromStorage() {
+const saved = localStorage.getItem('hairbytoni-availability');
+return saved ? JSON.parse(saved) : this.generateDefaultData();
+}
+
+generateDefaultData() {
+const data = {};
+const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+
+for (let day = 1; day <= daysInMonth; day++) {
+const date = new Date(this.currentYear, this.currentMonth, day);
+const dateKey = date.toISOString().split('T')[0];
+const dayOfWeek = date.getDay();
+
+let available = true;
+let slots = this.generateTimeSlots();
+
+if (dayOfWeek === 0) { // Sunday
+available = false;
+} else if (dayOfWeek === 6) { // Saturday
+slots = this.generateTimeSlots(8, 17); // 8 AM - 5 PM
+} else { // Weekdays
+slots = this.generateTimeSlots(9, 19); // 9 AM - 7 PM
+}
+
+data[dateKey] = { available, slots };
+}
+
+return data;
+}
+
+generateTimeSlots(startHour = 9, endHour = 19) {
+const slots = [];
+for (let hour = startHour; hour < endHour; hour++) {
+for (let minute of [0, 30]) {
+const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+slots.push({
+time: timeString,
+available: true,
+booked: false
+});
+}
+}
+return slots;
+}
+
+renderTable() {
+const tbody = document.getElementById('tableBody');
+tbody.innerHTML = '';
+
+const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+
+for (let day = 1; day <= daysInMonth; day++) {
+const date = new Date(this.currentYear, this.currentMonth, day);
+const dateKey = date.toISOString().split('T')[0];
+const dayData = this.availabilityData[dateKey] || { available: true, slots: this.generateTimeSlots() };
+
+const row = document.createElement('tr');
+
+// Date cell
+const dateCell = document.createElement('td');
+dateCell.textContent = day;
+row.appendChild(dateCell);
+
+// Day cell
+const dayCell = document.createElement('td');
+dayCell.textContent = date.toLocaleDateString('en-US', { weekday: 'short' });
+row.appendChild(dayCell);
+
+// Available toggle cell
+const availableCell = document.createElement('td');
+const toggleBtn = document.createElement('button');
+toggleBtn.className = 'toggle-btn';
+toggleBtn.textContent = dayData.available ? 'Available' : 'Unavailable';
+toggleBtn.style.background = dayData.available ? '#d4edda' : '#f8d7da';
+toggleBtn.style.color = dayData.available ? '#155724' : '#721c24';
+
+toggleBtn.addEventListener('click', () => {
+dayData.available = !dayData.available;
+this.saveData();
+this.renderTable();
+});
+
+availableCell.appendChild(toggleBtn);
+row.appendChild(availableCell);
+
+// Time slots
+dayData.slots.forEach(slot => {
+const slotCell = document.createElement('td');
+slotCell.className = 'time-cell';
+
+if (slot.booked) {
+slotCell.innerHTML = '<span class="status-booked">Booked</span>';
+} else if (!dayData.available) {
+slotCell.innerHTML = '<span class="status-unavailable">N/A</span>';
+} else {
+const slotBtn = document.createElement('button');
+slotBtn.className = 'toggle-btn';
+slotBtn.textContent = slot.available ? 'Free' : 'Block';
+slotBtn.style.background = slot.available ? '#d4edda' : '#f8d7da';
+slotBtn.style.color = slot.available ? '#155724' : '#721c24';
+
+slotBtn.addEventListener('click', () => {
+slot.available = !slot.available;
+this.saveData();
+this.renderTable();
+});
+
+slotCell.appendChild(slotBtn);
+}
+
+row.appendChild(slotCell);
+});
+
+tbody.appendChild(row);
+}
+}
+
+bulkAction(action) {
+const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
+
+for (let day = 1; day <= daysInMonth; day++) {
+const date = new Date(this.currentYear, this.currentMonth, day);
+const dateKey = date.toISOString().split('T')[0];
+const dayOfWeek = date.getDay();
+
+if (!this.availabilityData[dateKey]) {
+this.availabilityData[dateKey] = { available: true, slots: this.generateTimeSlots() };
+}
+
+const dayData = this.availabilityData[dateKey];
+
+switch (action) {
+case 'setAvailable':
+dayData.available = true;
+dayData.slots.forEach(slot => slot.available = true);
+break;
+case 'setUnavailable':
+dayData.available = false;
+break;
+case 'weekdaysAvailable':
+dayData.available = (dayOfWeek >= 1 && dayOfWeek <= 5);
+if (dayData.available) {
+dayData.slots.forEach(slot => slot.available = true);
+}
+break;
+case 'weekendsUnavailable':
+if (dayOfWeek === 0 || dayOfWeek === 6) {
+dayData.available = false;
+}
+break;
+case 'clearBookings':
+dayData.slots.forEach(slot => slot.booked = false);
+break;
+}
+}
+
+this.saveData();
+this.renderTable();
+}
+
+saveData() {
+localStorage.setItem('hairbytoni-availability', JSON.stringify(this.availabilityData));
+
+// Visual feedback
+const indicator = document.getElementById('saveIndicator');
+indicator.textContent = 'Saving...';
+indicator.className = 'save-indicator saving';
+
+setTimeout(() => {
+indicator.textContent = 'Saved!';
+indicator.className = 'save-indicator saved';
+
+setTimeout(() => {
+indicator.textContent = 'Ready';
+indicator.className = 'save-indicator';
+}, 2000);
+}, 500);
+}
+}
+
+// Hamburger Menu (reuse from main site)
+const hamburger = document.querySelector('.hamburger');
+const navContainer = document.querySelector('.nav-container');
+
+if (hamburger && navContainer) {
+hamburger.addEventListener('click', function() {
+hamburger.classList.toggle('active');
+navContainer.classList.toggle('active');
+});
+
+document.addEventListener('click', function(event) {
+if (!navContainer.contains(event.target) && !hamburger.contains(event.target)) {
+hamburger.classList.remove('active');
+navContainer.classList.remove('active');
+}
+});
+
+const navLinks = navContainer.querySelectorAll('a');
+navLinks.forEach(link => {
+link.addEventListener('click', function() {
+hamburger.classList.remove('active');
+navContainer.classList.remove('active');
+});
+});
+}
+
+// Initialize admin spreadsheet
+document.addEventListener('DOMContentLoaded', function() {
+new AdminSpreadsheet();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hair by Toni</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+</head>
+
+<body>
+
+<nav>
+<a href="#home"><h2>Hair by Toni</h2></a>
+
+<div class="nav-container">
+<ul>
+<li><a href="#home">Home</a></li>
+<li><a href="#services">Services</a></li>
+<li><a href="#gallery">Gallery</a></li>
+<li><a href="#availability">Availability</a></li>
+<li><a href="#contact">Contact</a></li>
+</ul>
+
+<a href="#contact" class="book">Book Appointment</a>
+</div>
+
+<div class="hamburger">
+<span></span>
+<span></span>
+<span></span>
+</div>
+</nav>
+
+<header id="home" class="hero">
+<h1>Hair by Toni</h1>
+<p>Luxury Hair. Personalized Style.</p>
+<a href="#contact" class="hero-btn">Book Appointment</a>
+</header>
+
+<section id="services" class="services-preview">
+<h2>Our Services</h2>
+
+<div class="service-grid">
+
+<div class="card">
+<h3>Blowouts</h3>
+<p>Professional blowouts for smooth, voluminous hair that lasts all day.</p>
+</div>
+
+<div class="card">
+<h3>Haircuts</h3>
+<p>Custom cuts designed to match your style and face shape perfectly.</p>
+</div>
+
+<div class="card">
+<h3>Glazes</h3>
+<p>Color-enhancing glazes that add shine, tone, and protect your hair.</p>
+</div>
+
+</div>
+</section>
+
+<section class="about">
+<h2>About Hair by Toni</h2>
+
+<p>
+Hair by Toni focuses on modern styling, precision haircuts,
+and customized color. Every client receives a personalized
+experience designed to bring out their best look.
+</p>
+
+</section>
+
+<section class="testimonials">
+<h2>What Our Clients Say</h2>
+<div class="testimonial-grid">
+<div class="testimonial">
+<p>"Toni is absolutely amazing! She transformed my hair and made me feel so confident. Highly recommend!"</p>
+<p class="client-name">- Sarah M.</p>
+</div>
+<div class="testimonial">
+<p>"Professional, friendly, and incredibly talented. My color has never looked better!"</p>
+<p class="client-name">- Jennifer L.</p>
+</div>
+<div class="testimonial">
+<p>"Best hair salon in town. Toni takes the time to listen and delivers exactly what you want."</p>
+<p class="client-name">- Maria R.</p>
+</div>
+</div>
+</section>
+
+<section id="gallery" class="gallery">
+<h2>Gallery</h2>
+<div class="gallery-grid">
+<div class="gallery-item">
+<div class="placeholder-image">Hair Styling Example 1</div>
+</div>
+<div class="gallery-item">
+<div class="placeholder-image">Hair Styling Example 2</div>
+</div>
+<div class="gallery-item">
+<div class="placeholder-image">Hair Styling Example 3</div>
+</div>
+<div class="gallery-item">
+<div class="placeholder-image">Hair Styling Example 4</div>
+</div>
+</div>
+</section>
+
+<section id="availability" class="availability">
+<h2>Check Availability</h2>
+<p>Select a date to see available time slots for your appointment.</p>
+
+<div class="calendar-container">
+<div class="calendar-header">
+<button id="prevMonth" class="calendar-nav">‹</button>
+<h3 id="currentMonth">March 2026</h3>
+<button id="nextMonth" class="calendar-nav">›</button>
+</div>
+
+<div class="calendar-grid">
+<div class="calendar-day-header">Sun</div>
+<div class="calendar-day-header">Mon</div>
+<div class="calendar-day-header">Tue</div>
+<div class="calendar-day-header">Wed</div>
+<div class="calendar-day-header">Thu</div>
+<div class="calendar-day-header">Fri</div>
+<div class="calendar-day-header">Sat</div>
+<!-- Calendar days will be populated by JavaScript -->
+</div>
+</div>
+
+<div class="time-slots" id="timeSlots" style="display: none;">
+<h4>Available Times for <span id="selectedDate"></span></h4>
+<div class="time-grid" id="timeGrid">
+<!-- Time slots will be populated by JavaScript -->
+</div>
+</div>
+</section>
+
+<section id="contact" class="contact">
+<h2>Contact & Book Appointment</h2>
+<p>Ready to transform your look? Get in touch to schedule your consultation.</p>
+
+<div class="contact-container">
+<div class="contact-info">
+<div class="info-section">
+<h3>Business Hours</h3>
+<p>Monday - Friday: 9:00 AM - 7:00 PM</p>
+<p>Saturday: 8:00 AM - 5:00 PM</p>
+<p>Sunday: Closed</p>
+</div>
+
+<div class="info-section">
+<h3>Contact Information</h3>
+<p>📞 Phone: (732) 677-9533</p>
+<p>✉️ Email: info@hairbytoni.com</p>
+<p>📍 Address: 123 Main Street, City, State 12345</p>
+</div>
+
+<div class="info-section">
+<h3>Services Offered</h3>
+<p>• Professional Blowouts</p>
+<p>• Expert Haircuts</p>
+<p>• Color-Enhancing Glazes</p>
+</div>
+</div>
+
+<div class="booking-form">
+<h3>Book Your Appointment</h3>
+<form id="contactForm">
+<div class="form-group">
+<input type="text" id="name" placeholder="Full Name" required>
+</div>
+
+<div class="form-group">
+<input type="email" id="email" placeholder="Email Address" required>
+</div>
+
+<div class="form-group">
+<input type="tel" id="phone" placeholder="Phone Number" required>
+</div>
+
+<div class="form-group">
+<select id="service" required>
+<option value="">Select Service</option>
+<option value="blowout">Blowout</option>
+<option value="haircut">Haircut</option>
+<option value="glaze">Glaze</option>
+</select>
+</div>
+
+<div class="form-group">
+<input type="date" id="date" required>
+</div>
+
+<div class="form-group">
+<textarea id="message" placeholder="Additional notes or special requests"></textarea>
+</div>
+
+<button type="submit">Book Appointment</button>
+</form>
+</div>
+</div>
+</section>
+
+<footer>
+<p>Hair by Toni © 2026</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
