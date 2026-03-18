@@ -445,4 +445,5 @@ const adminLi = document.createElement('li');
 adminLi.innerHTML = '<a href="admin.html">Admin Panel</a>';
 navList.appendChild(adminLi);
 }
+
 });
