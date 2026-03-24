@@ -214,7 +214,18 @@
     </div>
   </div>
 </section>
+<button id="backToTop">↑</button>
+<script>
+const btn = document.getElementById("backToTop");
 
+window.onscroll = () => {
+  btn.style.display = window.scrollY > 200 ? "flex" : "none";
+};
+
+btn.onclick = () => {
+  window.scrollTo({top:0, behavior:"smooth"});
+};
+</script>
 <footer>
   <p>&copy; 2026 Hair by Toni. All rights reserved.</p>
 </footer>
