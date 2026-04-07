@@ -51,10 +51,11 @@ const email = document.getElementById("email").value.trim();
 const phone = document.getElementById("phone").value.trim();
 const service = document.getElementById("service").value;
 const date = document.getElementById("date").value;
+const time = document.getElementById("time").value;
 const message = document.getElementById("message").value.trim();
 
 // Basic validation
-if(name === "" || email === "" || phone === "" || service === "" || date === ""){
+if(name === "" || email === "" || phone === "" || service === "" || date === "" || time === ""){
 alert("Please fill out all required fields.");
 return;
 }
@@ -84,7 +85,7 @@ return;
 }
 
 // If all validations pass, show success message
-alert(`Thank you ${name}! Your appointment request for ${service} on ${date} has been submitted. We'll contact you at ${phone} or ${email} to confirm your booking.`);
+alert(`Thank you ${name}! Your appointment request for ${service} on ${date} at ${time} has been submitted. We'll contact you at ${phone} or ${email} to confirm your booking.`);
 
 // Reset form
 form.reset();
@@ -128,7 +129,9 @@ const today = new Date();
 for (let i = 0; i < 90; i++) { // Next 90 days
 const date = new Date(today);
 date.setDate(today.getDate() + i);
-const dateKey = date.toISOString().split('T')[0];
+const dateKey = date.getFullYear() + '-' + 
+                String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(date.getDate()).padStart(2, '0');
 const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
 if (dayOfWeek === 0) { // Sunday - closed
@@ -151,16 +154,23 @@ return defaultData;
 
 generateTimeSlots(startHour, endHour) {
 const slots = [];
-for (let hour = startHour; hour < endHour; hour++) {
-for (let minute of [0, 30]) { // 30-minute intervals
-const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+// Create specific time slots instead of 30-minute intervals
+const specificTimes = ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00'];
+
+specificTimes.forEach(time => {
+const timeParts = time.split(':');
+const hours = timeParts[0];
+const minutes = timeParts[1];
+const hourNum = parseInt(hours);
+if (hourNum >= startHour && hourNum < endHour) {
 slots.push({
-time: timeString,
+time: time,
 available: true,
 booked: false
 });
 }
-}
+});
+
 return slots;
 }
 
@@ -182,6 +192,9 @@ const calendarGrid = document.querySelector('.calendar-grid');
 const existingDays = calendarGrid.querySelectorAll('.calendar-day');
 existingDays.forEach(day => day.remove());
 
+// Clear time slots when changing months
+document.getElementById('timeSlotsModal').style.display = 'none';
+
 // Get first day of month and last day
 const firstDay = new Date(year, month, 1);
 const lastDay = new Date(year, month + 1, 0);
@@ -202,24 +215,35 @@ if (currentDay.getMonth() !== month) {
 dayElement.classList.add('other-month');
 } else {
 // Check availability
-const dateKey = currentDay.toISOString().split('T')[0];
+const dateKey = currentDay.getFullYear() + '-' + 
+                String(currentDay.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(currentDay.getDate()).padStart(2, '0');
 const dayData = this.availabilityData[dateKey];
 
-if (dayData && dayData.available) {
+// For testing: make all days in the future available
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const isFuture = currentDay >= today;
+
+if ((dayData && dayData.available) || isFuture) {
 dayElement.classList.add('available');
 } else {
 dayElement.classList.add('unavailable');
 }
 
 // Check if it's today
-const today = new Date();
 if (currentDay.toDateString() === today.toDateString()) {
 dayElement.classList.add('today');
 }
 }
 
 // Add click handler
-dayElement.addEventListener('click', () => this.selectDate(currentDay, dateKey));
+dayElement.addEventListener('click', () => {
+const clickDateKey = currentDay.getFullYear() + '-' + 
+                    String(currentDay.getMonth() + 1).padStart(2, '0') + '-' + 
+                    String(currentDay.getDate()).padStart(2, '0');
+this.selectDate(currentDay, clickDateKey);
+});
 
 calendarGrid.appendChild(dayElement);
 }
@@ -229,7 +253,12 @@ selectDate(date, dateKey) {
 this.selectedDate = date;
 const dayData = this.availabilityData[dateKey];
 
-const timeSlotsDiv = document.getElementById('timeSlots');
+// Clear previous selection
+document.querySelectorAll('.calendar-day.selected').forEach(day => {
+day.classList.remove('selected');
+});
+
+const modal = document.getElementById('timeSlotsModal');
 const selectedDateSpan = document.getElementById('selectedDate');
 const timeGrid = document.getElementById('timeGrid');
 
@@ -237,6 +266,15 @@ const timeGrid = document.getElementById('timeGrid');
 timeGrid.innerHTML = '';
 
 if (dayData && dayData.available) {
+// Highlight selected date
+const dayElements = document.querySelectorAll('.calendar-day');
+dayElements.forEach(dayEl => {
+const dayNumber = parseInt(dayEl.textContent);
+if (dayNumber === date.getDate() && !dayEl.classList.contains('other-month')) {
+dayEl.classList.add('selected');
+}
+});
+
 selectedDateSpan.textContent = date.toLocaleDateString('en-US', {
 weekday: 'long',
 year: 'numeric',
@@ -260,17 +298,121 @@ slotElement.addEventListener('click', () => this.selectTimeSlot(slot, dateKey));
 timeGrid.appendChild(slotElement);
 });
 
-timeSlotsDiv.style.display = 'block';
+modal.style.display = 'flex';
 } else {
-timeSlotsDiv.style.display = 'none';
+// Check if it's a future date that should be available
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+if (date >= today) {
+// Create default slots for future dates
+const dayOfWeek = date.getDay();
+let slots = [];
+if (dayOfWeek === 0) { // Sunday - closed
 alert('Sorry, we are closed on this date. Please select another date.');
+return;
+} else if (dayOfWeek === 6) { // Saturday
+slots = this.generateTimeSlots(8, 17);
+} else { // Monday-Friday
+slots = this.generateTimeSlots(9, 19);
+}
+
+// Highlight selected date
+const dayElements = document.querySelectorAll('.calendar-day');
+dayElements.forEach(dayEl => {
+const dayNumber = parseInt(dayEl.textContent);
+if (dayNumber === date.getDate() && !dayEl.classList.contains('other-month')) {
+dayEl.classList.add('selected');
+}
+});
+
+selectedDateSpan.textContent = date.toLocaleDateString('en-US', {
+weekday: 'long',
+year: 'numeric',
+month: 'long',
+day: 'numeric'
+});
+
+slots.forEach(slot => {
+const slotElement = document.createElement('div');
+slotElement.className = 'time-slot';
+slotElement.textContent = this.formatTime(slot.time);
+
+slotElement.classList.add('available');
+slotElement.addEventListener('click', () => this.selectTimeSlot(slot, dateKey));
+
+timeGrid.appendChild(slotElement);
+});
+
+modal.style.display = 'flex';
+} else {
+alert('Sorry, we are closed on this date. Please select another date.');
+}
 }
 }
 
 selectTimeSlot(slot, dateKey) {
-if (confirm(`Book appointment for ${this.selectedDate.toLocaleDateString()} at ${this.formatTime(slot.time)}?`)) {
+// Show custom confirmation modal instead of browser confirm
+this.showConfirmationModal(slot, dateKey);
+}
+
+showConfirmationModal(slot, dateKey) {
+const modal = document.getElementById('confirmModal');
+const confirmDate = document.getElementById('confirmDate');
+const confirmTime = document.getElementById('confirmTime');
+
+// Populate modal with appointment details
+confirmDate.textContent = this.selectedDate.toLocaleDateString('en-US', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric'
+});
+confirmTime.textContent = this.formatTime(slot.time);
+
+// Show modal
+modal.style.display = 'flex';
+
+// Handle confirm button
+const confirmBtn = document.getElementById('confirmBook');
+const cancelBtn = document.getElementById('confirmCancel');
+
+// Remove existing event listeners
+const newConfirmBtn = confirmBtn.cloneNode(true);
+const newCancelBtn = cancelBtn.cloneNode(true);
+confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+
+// Add new event listeners
+newConfirmBtn.addEventListener('click', () => {
+  this.confirmBooking(slot, dateKey);
+});
+
+newCancelBtn.addEventListener('click', () => {
+  modal.style.display = 'none';
+});
+
+// Close modal when clicking outside
+modal.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.style.display = 'none';
+  }
+});
+}
+
+confirmBooking(slot, dateKey) {
 // Mark slot as booked
-const dayData = this.availabilityData[dateKey];
+let dayData = this.availabilityData[dateKey];
+if (!dayData) {
+// Create data structure for this date if it doesn't exist
+const selectedDate = new Date(dateKey + 'T00:00:00');
+const dayOfWeek = selectedDate.getDay();
+dayData = {
+available: dayOfWeek !== 0, // Not Sunday
+slots: dayOfWeek === 0 ? [] : (dayOfWeek === 6 ? this.generateTimeSlots(8, 17) : this.generateTimeSlots(9, 19))
+};
+this.availabilityData[dateKey] = dayData;
+}
+
 const slotIndex = dayData.slots.findIndex(s => s.time === slot.time);
 if (slotIndex !== -1) {
 dayData.slots[slotIndex].booked = true;
@@ -279,17 +421,53 @@ this.renderCalendar();
 this.selectDate(this.selectedDate, dateKey);
 }
 
-// Here you could integrate with the booking form
-alert('Time slot selected! Please fill out the booking form above to complete your appointment.');
+// Close confirmation modal
+document.getElementById('confirmModal').style.display = 'none';
+
+// Auto-fill the booking form
+this.populateBookingForm(slot);
+
+// Close time slots modal
+document.getElementById('timeSlotsModal').style.display = 'none';
+
+// Scroll to the booking form and highlight it
+const bookingForm = document.getElementById('contactForm');
+if (bookingForm) {
+bookingForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+setTimeout(() => {
+bookingForm.style.boxShadow = '0 0 20px rgba(196, 122, 139, 0.6)';
+setTimeout(() => {
+bookingForm.style.boxShadow = '';
+}, 2000);
+}, 500);
 }
 }
 
 formatTime(timeString) {
-const [hours, minutes] = timeString.split(':');
+const timeParts = timeString.split(':');
+const hours = timeParts[0];
+const minutes = timeParts[1];
 const hour = parseInt(hours);
 const ampm = hour >= 12 ? 'PM' : 'AM';
 const displayHour = hour % 12 || 12;
 return `${displayHour}:${minutes} ${ampm}`;
+}
+
+populateBookingForm(slot) {
+// Fill in the date field
+const dateInput = document.getElementById('date');
+if (dateInput) {
+const dateString = this.selectedDate.getFullYear() + '-' + 
+                  String(this.selectedDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                  String(this.selectedDate.getDate()).padStart(2, '0');
+dateInput.value = dateString;
+}
+
+// Fill in the time field
+const timeInput = document.getElementById('time');
+if (timeInput) {
+timeInput.value = slot.time;
+}
 }
 
 bindEvents() {
@@ -367,8 +545,10 @@ toggleDayAvailability(dayElement) {
 const dayNumber = parseInt(dayElement.textContent);
 const year = this.calendarManager.currentDate.getFullYear();
 const month = this.calendarManager.currentDate.getMonth();
-const date = new Date(year, month, dayNumber);
-const dateKey = date.toISOString().split('T')[0];
+const selectedDate = new Date(year, month, dayNumber);
+const dateKey = selectedDate.getFullYear() + '-' + 
+                String(selectedDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(selectedDate.getDate()).padStart(2, '0');
 
 const dayData = this.calendarManager.availabilityData[dateKey];
 if (dayData) {
@@ -444,6 +624,49 @@ const navList = document.querySelector('nav ul');
 const adminLi = document.createElement('li');
 adminLi.innerHTML = '<a href="admin.html">Admin Panel</a>';
 navList.appendChild(adminLi);
+}
+
+// Modal functionality
+const modal = document.getElementById('timeSlotsModal');
+const modalClose = document.getElementById('modalClose');
+
+if (modalClose) {
+modalClose.addEventListener('click', () => {
+modal.style.display = 'none';
+});
+}
+
+// Close modal when clicking outside
+modal.addEventListener('click', (e) => {
+if (e.target === modal) {
+modal.style.display = 'none';
+}
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', (e) => {
+if (e.key === 'Escape' && modal.style.display === 'flex') {
+modal.style.display = 'none';
+}
+});
+
+// Back to Top Button
+const backToTopButton = document.getElementById('backToTop');
+if (backToTopButton) {
+window.addEventListener('scroll', function() {
+if (window.pageYOffset > 300) {
+backToTopButton.style.display = 'block';
+} else {
+backToTopButton.style.display = 'none';
+}
+});
+
+backToTopButton.addEventListener('click', function() {
+window.scrollTo({
+top: 0,
+behavior: 'smooth'
+});
+});
 }
 
 });

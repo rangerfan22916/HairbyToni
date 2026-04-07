@@ -60,11 +60,10 @@
 </section>
 
 <section class="about">
-  <h2>About Hair by Toni</h2>
+  <h2> About Toni</h2>
   <p>
-    Hair by Toni focuses on modern styling, precision haircuts,
-    and customized color. Every client receives a personalized
-    experience designed to bring out their best look.
+    hi my name is toni agostino. I am a cosmetology student. I go to monmouth county vocational school. I have always wanted to do hair since i was a kid. This program was a great opportunity for me. I was very thankful to be accepted into the program. My favorite things to do is blow outs, haircuts, and hair color. i’m also very thankful to have two very supportive parents who built me a salon in my basement. They are very happy that i have started my career already. Making people feel beauty and happy is want i always wanted.
+
   </p>
 </section>
 
@@ -141,9 +140,45 @@
     </div>
   </div>
 
-  <div class="time-slots" id="timeSlots" style="display: none;">
-    <h4>Available Times for <span id="selectedDate"></span></h4>
-    <div class="time-grid" id="timeGrid"></div>
+  <!-- Time Slots Modal -->
+  <div class="modal-overlay" id="timeSlotsModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4>Available Times for <span id="selectedDate"></span></h4>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="time-grid" id="timeGrid"></div>
+    </div>
+  </div>
+
+  <!-- Booking Confirmation Modal -->
+  <div class="modal-overlay" id="confirmModal" style="display: none;">
+    <div class="modal-content confirm-modal">
+      <div class="confirm-header">
+        <h3>Confirm Your Appointment</h3>
+      </div>
+      <div class="confirm-body">
+        <div class="appointment-details">
+          <div class="detail-row">
+            <span class="detail-label">Date:</span>
+            <span class="detail-value" id="confirmDate"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Time:</span>
+            <span class="detail-value" id="confirmTime"></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Service:</span>
+            <span class="detail-value">Hair Appointment</span>
+          </div>
+        </div>
+        <p class="confirm-message">Are you sure you want to book this appointment? We'll send you a confirmation email once we review your request.</p>
+      </div>
+      <div class="confirm-actions">
+        <button class="btn-cancel" id="confirmCancel">Cancel</button>
+        <button class="btn-confirm" id="confirmBook">Book Appointment</button>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -203,6 +238,10 @@
 
         <div class="form-group">
           <input type="date" id="date" required>
+        </div>
+
+        <div class="form-group">
+          <input type="time" id="time" placeholder="Preferred Time" required>
         </div>
 
         <div class="form-group">
