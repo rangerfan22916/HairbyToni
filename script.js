@@ -149,6 +149,25 @@ slots: this.generateTimeSlots(9, 19) // 9 AM to 7 PM
 }
 }
 
+// Add demo bookings to show the system working
+const demoBookings = [
+  { date: '2026-04-10', time: '10:00' }, // Thursday 10 AM
+  { date: '2026-04-10', time: '14:00' }, // Thursday 2 PM
+  { date: '2026-04-15', time: '11:00' }, // Tuesday 11 AM
+  { date: '2026-04-18', time: '15:00' }, // Friday 3 PM
+  { date: '2026-04-18', time: '16:00' }, // Friday 4 PM
+  { date: '2026-04-22', time: '09:00' }  // Tuesday 9 AM
+];
+
+demoBookings.forEach(booking => {
+  if (defaultData[booking.date] && defaultData[booking.date].slots) {
+    const slot = defaultData[booking.date].slots.find(s => s.time === booking.time);
+    if (slot) {
+      slot.booked = true;
+    }
+  }
+});
+
 return defaultData;
 }
 
