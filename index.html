@@ -6,12 +6,26 @@
 <title>Hair by Toni</title>
 <link rel="stylesheet" href="style.css">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<!-- smooth scroll only -->
+<style>
+html {
+  scroll-behavior: smooth;
+}
+</style>
+
 </head>
 
 <body>
 
 <nav>
-  <a href="#home"><h2>Hair by Toni</h2></a>
+
+  <!-- ✅ BIGGER LOGO ONLY CHANGE -->
+  <a href="#home" class="logo">
+    <img src="imgs/hair_by_toni_logo_cropped-removebg-preview.png"
+         alt="Hair by Toni Logo"
+         style="height:95px; width:auto; display:block;">
+  </a>
 
   <div class="nav-container">
     <ul>
@@ -30,6 +44,7 @@
     <span></span>
     <span></span>
   </div>
+
 </nav>
 
 <header id="home" class="hero">
@@ -60,16 +75,20 @@
 </section>
 
 <section class="about">
-  <h2> About Toni</h2>
+  <h2>About Toni</h2>
   <p>
-    hi my name is toni agostino. I am a cosmetology student. I go to monmouth county vocational school. I have always wanted to do hair since i was a kid. This program was a great opportunity for me. I was very thankful to be accepted into the program. My favorite things to do is blow outs, haircuts, and hair color. i’m also very thankful to have two very supportive parents who built me a salon in my basement. They are very happy that i have started my career already. Making people feel beauty and happy is want i always wanted.
-
+    hi my name is toni agostino. I am a cosmetology student. I go to monmouth county vocational school.
+    I have always wanted to do hair since i was a kid. This program was a great opportunity for me.
+    I was very thankful to be accepted into the program. My favorite things to do is blow outs,
+    haircuts, and hair color. I’m also very thankful to have two very supportive parents who built me a salon in my basement.
+    They are very happy that i have started my career already. Making people feel beautiful and happy is what I always wanted.
   </p>
 </section>
 
 <section class="testimonials">
   <h2>What Our Clients Say</h2>
   <div class="testimonial-grid">
+
     <div class="testimonial">
       <p>"Toni is absolutely amazing! She transformed my hair and made me feel so confident. Highly recommend!"</p>
       <p class="client-name">- Sarah M.</p>
@@ -84,37 +103,22 @@
       <p>"Best hair salon in town. Toni takes the time to listen and delivers exactly what you want."</p>
       <p class="client-name">- Maria R.</p>
     </div>
+
   </div>
 </section>
 
-
 <section id="gallery" class="gallery">
   <h2>Gallery</h2>
+
   <div class="gallery-grid">
-    <div class="gallery-item">
-      <img src="imgs/bella1.jpeg" alt="Hair Styling 1">
-    </div>
-    <div class="gallery-item">
-      <img src="imgs/curly.jpeg" alt="Hair Styling 2">
-    </div>
-    <div class="gallery-item">
-      <img src="imgs/sadie.jpeg" alt="Hair Styling 3">
-    </div>
-    <div class="gallery-item">
-      <img src="imgs/nessy2.jpeg" alt="Hair Styling 4">
-    </div>
-    <div class="gallery-item">
-      <img src="imgs/nessy3.jpeg" alt="Hair Styling 5">
-    </div>
-    <div class="gallery-item">
-      <img src="imgs/red-hair.jpeg" alt="Hair Styling 6">
-    </div>
-    <div class="gallery-item">
-      <img src="imgs/creepy.jpeg" alt="Hair Styling 7">
-    </div>
-    <div class="gallery-item">
-      <img src="imgs/short-red.jpeg" alt="Hair Styling 8">
-    </div>
+    <div class="gallery-item"><img src="imgs/bella1.jpeg" alt=""></div>
+    <div class="gallery-item"><img src="imgs/curly.jpeg" alt=""></div>
+    <div class="gallery-item"><img src="imgs/sadie.jpeg" alt=""></div>
+    <div class="gallery-item"><img src="imgs/nessy2.jpeg" alt=""></div>
+    <div class="gallery-item"><img src="imgs/nessy3.jpeg" alt=""></div>
+    <div class="gallery-item"><img src="imgs/red-hair.jpeg" alt=""></div>
+    <div class="gallery-item"><img src="imgs/creepy.jpeg" alt=""></div>
+    <div class="gallery-item"><img src="imgs/short-red.jpeg" alt=""></div>
   </div>
 </section>
 
@@ -172,8 +176,12 @@
             <span class="detail-value">Hair Appointment</span>
           </div>
         </div>
-        <p class="confirm-message">Are you sure you want to book this appointment? We'll send you a confirmation email once we review your request.</p>
+
+        <p class="confirm-message">
+          Are you sure you want to book this appointment? We'll send you a confirmation email once we review your request.
+        </p>
       </div>
+
       <div class="confirm-actions">
         <button class="btn-cancel" id="confirmCancel">Cancel</button>
         <button class="btn-confirm" id="confirmBook">Book Appointment</button>
@@ -215,45 +223,36 @@
       <h3>Book Your Appointment</h3>
 
       <form id="contactForm">
+        <div class="form-group"><input type="text" placeholder="Full Name" required></div>
+        <div class="form-group"><input type="email" placeholder="Email Address" required></div>
+        <div class="form-group"><input type="tel" placeholder="Phone Number" required></div>
         <div class="form-group">
-          <input type="text" id="name" placeholder="Full Name" required>
-        </div>
-
-        <div class="form-group">
-          <input type="email" id="email" placeholder="Email Address" required>
-        </div>
-
-        <div class="form-group">
-          <input type="tel" id="phone" placeholder="Phone Number" required>
-        </div>
-
-        <div class="form-group">
-          <select id="service" required>
+          <select required>
             <option value="">Select Service</option>
-            <option value="blowout">Blowout</option>
-            <option value="haircut">Haircut</option>
-            <option value="glaze">Glaze</option>
+            <option>Blowout</option>
+            <option>Haircut</option>
+            <option>Glaze</option>
           </select>
         </div>
-
-        <div class="form-group">
-          <input type="date" id="date" required>
-        </div>
-
-        <div class="form-group">
-          <input type="time" id="time" placeholder="Preferred Time" required>
-        </div>
-
-        <div class="form-group">
-          <textarea id="message" placeholder="Additional notes or special requests"></textarea>
-        </div>
+        <div class="form-group"><input type="date" required></div>
+        <div class="form-group"><input type="time" required></div>
+        <div class="form-group"><textarea placeholder="Notes"></textarea></div>
 
         <button type="submit">Book Appointment</button>
       </form>
     </div>
+
   </div>
 </section>
+
 <button id="backToTop">↑</button>
+
+<footer>
+  <p>&copy; 2026 Hair by Toni. All rights reserved.</p>
+</footer>
+
+<script src="script.js"></script>
+
 <script>
 const btn = document.getElementById("backToTop");
 
@@ -265,11 +264,6 @@ btn.onclick = () => {
   window.scrollTo({top:0, behavior:"smooth"});
 };
 </script>
-<footer>
-  <p>&copy; 2026 Hair by Toni. All rights reserved.</p>
-</footer>
-
-<script src="script.js"></script>
 
 </body>
 </html>
