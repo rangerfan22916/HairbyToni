@@ -688,5 +688,117 @@ behavior: 'smooth'
 });
 });
 }
-
+// =======================
+// SMOOTH SCROLL
+// =======================
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  });
 });
+
+// =======================
+// HAMBURGER MENU (FIXED)
+// =======================
+document.addEventListener("DOMContentLoaded", () => {
+  const hamburger = document.querySelector(".hamburger");
+  const navContainer = document.querySelector(".nav-container");
+
+  if (hamburger && navContainer) {
+    hamburger.addEventListener("click", () => {
+      navContainer.classList.toggle("active");
+      hamburger.classList.toggle("active");
+    });
+
+    // close when clicking link
+    navContainer.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        navContainer.classList.remove("active");
+        hamburger.classList.remove("active");
+      });
+    });
+
+    // close when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!navContainer.contains(e.target) && !hamburger.contains(e.target)) {
+        navContainer.classList.remove("active");
+        hamburger.classList.remove("active");
+      }
+    });
+  }
+
+  // =======================
+  // BACK TO TOP BUTTON
+  // =======================
+  const btn = document.getElementById("backToTop");
+
+  if (btn) {
+    window.addEventListener("scroll", () => {
+      btn.style.display = window.scrollY > 200 ? "flex" : "none";
+    });
+
+    btn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  // =======================
+  // FORM (SAFE VERSION)
+  // =======================
+  const form = document.getElementById("contactForm");
+
+  if (form) {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      alert("Appointment request sent!");
+      form.reset();
+    });
+  }
+
+  // =======================
+  // CALENDAR INIT SAFETY
+  // =======================
+  if (typeof CalendarManager !== "undefined") {
+    const calendarManager = new CalendarManager();
+    window.calendarManager = calendarManager;
+
+    if (typeof AdminManager !== "undefined") {
+      new AdminManager(calendarManager);
+    }
+  }
+
+  // =======================
+  // MODALS SAFETY
+  // =======================
+  const modal = document.getElementById("timeSlotsModal");
+  const modalClose = document.getElementById("modalClose");
+
+  if (modal && modalClose) {
+    modalClose.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.style.display = "none";
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        modal.style.display = "none";
+      }
+    });
+  }
+});
+
+
+}); 
